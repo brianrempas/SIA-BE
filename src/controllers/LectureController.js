@@ -4,13 +4,13 @@ const getAllLecture = async (req, res) => {
     await Lecture.findAll()
     .then(data => {
         if(!data.length) {
-            return res.status(200).json({
+            return res.status(201).json({
                 message: 'data is empty',
                 result: data
             });
         }
 
-        res.status(200).json({
+        res.status(201).json({
             result: data
         });
     })
@@ -22,7 +22,7 @@ const getAllLecture = async (req, res) => {
 }
 
 const createLecture = async (req, res) => {
-    var data = req.body.data
+    var data = req.body
     const uniqueNumber = (Math.floor(Math.random() * 100) + 1).toString();
     const nip = data.year_in + uniqueNumber // sementara
     await Lecture.create({
@@ -43,14 +43,14 @@ const createLecture = async (req, res) => {
 }
 
 const updateLecture = async (req, res) => {
+    const data = req.body
     const uniqueNumber = (Math.floor(Math.random() * 100) + 1).toString();
-    const nip = data.year_in + uniqueNumber // sementara
-    const data = req.body.data
+    //const nip = data.year_in + uniqueNumber // sementara
     await Lecture.update(
         {
             name: data.name,
             email: data.email,
-            nip: nip
+            nip: data.nip
         },
         {
             where: {
@@ -60,7 +60,7 @@ const updateLecture = async (req, res) => {
     )
     .then(data => {
         if (data[0] === 0) {
-            return res.status(200).json({
+            return res.status(400).json({
                 message: "Could not find the lecturer"
             });
         } 
@@ -86,7 +86,7 @@ const deleteLecture = async (req, res) => {
     )
     .then(data => {
         if (data[0] === 0) {
-            return res.status(200).json({
+            return res.status(400).json({
                 message: "Could not find the lecturer"
             });
         } 

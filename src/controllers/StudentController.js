@@ -4,7 +4,7 @@ const getAllStudents = async (req, res) => {
     await Student.findAll()
     .then(data => {
         if(!data.length) {
-            return res.status(200).json({
+            return res.status(201).json({
                 message: 'data is empty',
                 result: data
             });
@@ -22,11 +22,9 @@ const getAllStudents = async (req, res) => {
 }
 
 const createStudent = async (req, res) => {
-    //yearIn noId fakultas noIdFacility name email student_id
-    const data = req.body.data
+    const data = req.body
     const uniqueNumber = (Math.floor(Math.random() * 100) + 1).toString();
-    // const nim = data.yearIn + data.studentId + data.fakultas + data.noIdFacility
-    const nim = data.year_in + uniqueNumber // sementara
+    //const nim = data.year_in + uniqueNumber // sementara
     await Student.create({
         name: data.name,
         email: data.email,
@@ -45,7 +43,7 @@ const createStudent = async (req, res) => {
 }
 
 const updateStudent = async (req, res) => {
-    const data = req.body.data
+    const data = req.body
     const uniqueNumber = (Math.floor(Math.random() * 100) + 1).toString();
     const nim = data.year_in + uniqueNumber // sementara
     await Student.update(
@@ -63,7 +61,7 @@ const updateStudent = async (req, res) => {
 
     .then(data => {
         if (data[0] === 0) {
-            return res.status(200).json({
+            return res.status(400).json({
                 message: "Could not find the student"
             });
         } 
@@ -90,7 +88,7 @@ const deleteStudent = async (req, res) => {
 
     .then(data => {
         if (data[0] === 0) {
-            return res.status(200).json({
+            return res.status(400).json({
                 message: "Could not find the lecturer",
             });
         } 

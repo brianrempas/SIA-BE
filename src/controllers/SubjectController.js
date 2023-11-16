@@ -4,13 +4,13 @@ const getAllSubjects = async (req, res) => {
     await Subject.findAll()
     .then(data => {
         if(!data.length) {
-            return res.status(200).json({
+            return res.status(201).json({
                 message: 'data is empty',
                 result: data
             });
         }
 
-        res.status(200).json({
+        res.status(201).json({
             result: data
         });
     })
@@ -24,7 +24,7 @@ const getAllSubjects = async (req, res) => {
 const createSubject = async (req, res) => {
     //subject_id code name sks
     
-    const data = req.body.data
+    const data = req.body
     await Subject.create(
         {
             code: data.code,
@@ -45,7 +45,7 @@ const createSubject = async (req, res) => {
 }
 
 const updateSubject = async (req, res) => {
-    const data = req.body.data
+    const data = req.body
     await Subject.update(
         {
             code: data.code,

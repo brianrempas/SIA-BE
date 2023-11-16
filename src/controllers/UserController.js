@@ -10,13 +10,13 @@ const getAllUsers = async (req, res) => {
   })
     .then((data) => {
       if (!data.length) {
-        return res.status(200).json({
+        return res.status(201).json({
           message: "data is empty",
           result: data,
         });
       }
 
-      res.status(200).json(data);
+      res.status(201).json(data);
     })
     .catch((error) => {
       res.status(400).json({
@@ -103,7 +103,7 @@ const updateUser = async (req, res) => {
   )
     .then((data) => {
       if (data[0] === 0) {
-        return res.status(200).json({
+        return res.status(400).json({
           message: "account not found",
           result: data,
         });
@@ -156,7 +156,7 @@ const logInUser = async (req, res) => {
       lecture_id: user.lecture_id,
     };
     // const passwordMatch = await password === user.password;
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    const passwordMatch = await password === user.password
     const secretKey = process.env.SECRET_KEY;
     console.log(secretKey);
     console.log(password + " " + user.password);
@@ -170,7 +170,7 @@ const logInUser = async (req, res) => {
         token: JWTtoken,
       });
     } else {
-      return res.status(200).json({ message: "Incorrect password" });
+      return res.status(400).json({ message: "Incorrect password" });
     }
   } catch (error) {
     return res.status(400).json({ message: "An error occurred: " + error });
