@@ -1,8 +1,8 @@
 const db        = require('../config/db.config');
 const Sequelize = require('sequelize');
 
-const Lecture = db.define("lecture", {
-    lecture_id: {
+const Prodi = db.define("prodi", {
+    prodi_id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
@@ -11,20 +11,12 @@ const Lecture = db.define("lecture", {
         type: Sequelize.STRING,
         allowNull: false
     },
-    nip: {
-        type: Sequelize.STRING,
+    idLecture: {
+        type: Sequelize.INTEGER,
         allowNull: false
     },
-    email: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    gender: {
-        type: Sequelize.ENUM('male','female'),
-        allowNull: false
-    }
 },{
     freezeTableName: true
 });
 
-module.exports = Lecture;
+module.exports = Prodi;

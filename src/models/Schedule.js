@@ -1,30 +1,34 @@
 const db        = require('../config/db.config');
 const Sequelize = require('sequelize');
 
-const Lecture = db.define("lecture", {
-    lecture_id: {
+const Schedule = db.define("schedule", {
+    schedule_id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    name: {
+    idProdi: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
+    idSubject: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
+    day: {
         type: Sequelize.STRING,
         allowNull: false
     },
-    nip: {
+    timeStart: {
         type: Sequelize.STRING,
         allowNull: false
     },
-    email: {
+    timeEnd: {
         type: Sequelize.STRING,
-        allowNull: false
-    },
-    gender: {
-        type: Sequelize.ENUM('male','female'),
         allowNull: false
     }
 },{
     freezeTableName: true
 });
 
-module.exports = Lecture;
+module.exports = Schedule;

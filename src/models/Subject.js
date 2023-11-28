@@ -7,6 +7,10 @@ const Subject = db.define("subject", {
         primaryKey: true,
         autoIncrement: true
     },
+    idProdi: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
     code: {
         type: Sequelize.STRING,
         allowNull: false

@@ -28,8 +28,9 @@ const createSubject = async (req, res) => {
     await Subject.create(
         {
             code: data.code,
+            idProdi: data.idProdi,
             name: data.name,
-            sks: data.sks
+            sks: data.sks,
         }
     )
     .then(data => {
@@ -50,7 +51,8 @@ const updateSubject = async (req, res) => {
         {
             code: data.code,
             name: data.name,
-            sks: data.sks
+            idProdi: data.idProdi,
+            sks: data.sks,
         },
         {
             where: {

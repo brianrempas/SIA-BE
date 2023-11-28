@@ -15,8 +15,10 @@ const getAllUsers = async (req, res) => {
           result: data,
         });
       }
-
-      res.status(201).json(data);
+      
+      res.status(201).json({
+        result: data
+      });
     })
     .catch((error) => {
       res.status(400).json({
@@ -24,6 +26,7 @@ const getAllUsers = async (req, res) => {
       });
     });
 };
+
 const createUser = async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   // username password role mixId
@@ -32,20 +35,16 @@ const createUser = async (req, res) => {
     username: data.username,
     password: await bcrypt.hash(data.password, salt),
     role: data.role,
-    student_id: null,
-    lecture_id: null,
+    student_id: 0,
+    lecture_id: 0,
   };
 
   switch (data.role) {
     case "student":
       userProperties.student_id = data.mixId;
-      console.log("student " + data.mixId);
-      console.log(userProperties);
       break;
     case "lecture":
       userProperties.lecture_id = data.mixId;
-      console.log("lecture " + data.mixId);
-      console.log(userProperties);
       break;
     case "admin":
       break;
@@ -69,17 +68,25 @@ const createUser = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
-  const data = req.body.data;
+  const data = req.body;
+  const form = {
+    username: data.username,
+    role: data.role,
+    student_id: 0,
+    lecture_id: 0,
+  }
+  //password: data.password,
+  if(data.password){
+    const salt = await bcrypt.genSalt(10);
+    form.password = await bcrypt.hash(data.password, salt);
+    console.log('changed password to, ' + data.password)
+  }
   switch (data.role) {
     case "student":
-      data.student_id = data.mixId;
-      console.log("student " + data.mixId);
-      console.log(data);
+      form.student_id = data.mixId;
       break;
     case "lecture":
-      data.lecture_id = data.mixId;
-      console.log("lecture " + data.mixId);
-      console.log(data);
+      form.lecture_id = data.mixId;
       break;
     case "admin":
       break;
@@ -88,13 +95,7 @@ const updateUser = async (req, res) => {
   }
 
   await User.update(
-    {
-      username: data.username,
-      password: data.password,
-      role: data.role,
-      student_id: data.student_id,
-      lecture_id: data.lecture_id,
-    },
+    form,
     {
       where: {
         user_id: data.userId,
@@ -141,10 +142,11 @@ const deleteUser = async (req, res) => {
 const logInUser = async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
-
   const user = await User.findOne({ where: { username } });
+  console.log(username + "  " + password)
 
   if (!user) {
+    console.log('!user')
     return res.status(400).json({ message: "username or password is wrong" });
   }
 
@@ -155,24 +157,23 @@ const logInUser = async (req, res) => {
       student_id: user.student_id,
       lecture_id: user.lecture_id,
     };
-    // const passwordMatch = await password === user.password;
-    const passwordMatch = await password === user.password
+    const passwordMatch = await bcrypt.compare(password, user.password);
     const secretKey = process.env.SECRET_KEY;
-    console.log(secretKey);
-    console.log(password + " " + user.password);
-    console.log(passwordMatch);
     if (passwordMatch) {
       const JWTtoken = Auth.createToken(dataRes, secretKey);
-      console.log("logged in: " + user.username);
       res.status(201).json({
         message: "Login successful",
         username: user.username,
+        role: user.role,
         token: JWTtoken,
+        mixId: user.student_id + user.lecture_id,
       });
     } else {
+      console.log('incorrect')
       return res.status(400).json({ message: "Incorrect password" });
     }
   } catch (error) {
+    console.log(error)
     return res.status(400).json({ message: "An error occurred: " + error });
   }
 };

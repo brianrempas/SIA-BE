@@ -23,12 +23,14 @@ const getAllStudents = async (req, res) => {
 
 const createStudent = async (req, res) => {
     const data = req.body
-    const uniqueNumber = (Math.floor(Math.random() * 100) + 1).toString();
-    //const nim = data.year_in + uniqueNumber // sementara
+    const uniqueNumber = (Math.floor(Math.random() * 100) + 1).toString().padStart(2, '0');
+    const nim = data.yearIn + uniqueNumber // sementara
     await Student.create({
         name: data.name,
         email: data.email,
-        nim: data.nim
+        nim: nim,
+        idProdi: data.idProdi,
+        gender: data.gender
     })
     .then(data => {
         res.status(201).json({
@@ -44,13 +46,15 @@ const createStudent = async (req, res) => {
 
 const updateStudent = async (req, res) => {
     const data = req.body
-    const uniqueNumber = (Math.floor(Math.random() * 100) + 1).toString();
-    const nim = data.year_in + uniqueNumber // sementara
+    const uniqueNumber = (Math.floor(Math.random() * 100) + 1).toString().padStart(2, '0');
+    const nim = data.yearIn + uniqueNumber // sementara
     await Student.update(
         {
             name: data.name,
             email: data.email,
-            nim: data.nim
+            nim: nim,
+            idProdi: data.idProdi,
+            gender: data.gender
         },
         {
             where: {

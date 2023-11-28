@@ -1,7 +1,7 @@
-const Lecture = require("../models/Lecture");
+const Schedule = require("../models/Schedule");
 
-const getAllLecture = async (req, res) => {
-    await Lecture.findAll()
+const getAllSchedule = async (req, res) => {
+    await Schedule.findAll()
     .then(data => {
         if(!data.length) {
             return res.status(201).json({
@@ -21,15 +21,14 @@ const getAllLecture = async (req, res) => {
     });
 }
 
-const createLecture = async (req, res) => {
+const createSchedule = async (req, res) => {
     var data = req.body
-    const uniqueNumber = (Math.floor(Math.random() * 100) + 1).toString().padStart(2, '0');
-    const nip = data.yearIn + uniqueNumber // sementara
-    await Lecture.create({
-        name: data.name,
-        email: data.email,
-        nip: nip,
-        gender: data.gender
+    await Schedule.create({
+        idProdi: data.idProdi,
+        idSubject: data.idSubject,
+        day: data.day,
+        timeStart: data.tS,
+        timeEnd: data.tE
     })
     .then(data => {
         res.status(201).json({
@@ -43,27 +42,26 @@ const createLecture = async (req, res) => {
     });
 }
 
-const updateLecture = async (req, res) => {
+const updateSchedule = async (req, res) => {
     const data = req.body
-    const uniqueNumber = (Math.floor(Math.random() * 100) + 1).toString().padStart(2, '0');
-    const nip = data.yearIn + uniqueNumber // sementara
-    await Lecture.update(
+    await Schedule.update(
         {
-            name: data.name,
-            email: data.email,
-            nip: nip,
-            gender: data.gender
+            idProdi: data.idProdi,
+            idSubject: data.idSubject,
+            day: data.day,
+            timeStart: data.tS,
+            timeEnd: data.tE
         },
         {
             where: {
-                lecture_Id: data.lectureId
+                schedule_Id: data.scheduleId
             }
         }
     )
     .then(data => {
         if (data[0] === 0) {
             return res.status(400).json({
-                message: "Could not find the lecturer"
+                message: "Could not find schedule"
             });
         } 
         
@@ -78,18 +76,18 @@ const updateLecture = async (req, res) => {
     });
 }
 
-const deleteLecture = async (req, res) => {
-    await Lecture.destroy(
+const deleteSchedule = async (req, res) => {
+    await Schedule.destroy(
         {
             where: {
-                lecture_Id: req.params.id
+                schedule_Id: req.params.id
             }
         }
     )
     .then(data => {
         if (data[0] === 0) {
             return res.status(400).json({
-                message: "Could not find the lecturer"
+                message: "Could not find schedule"
             });
         } 
         
@@ -106,8 +104,8 @@ const deleteLecture = async (req, res) => {
 
 
 module.exports = {
-    getAllLecture,
-    createLecture,
-    updateLecture,
-    deleteLecture
+    getAllSchedule,
+    createSchedule,
+    updateSchedule,
+    deleteSchedule
 }

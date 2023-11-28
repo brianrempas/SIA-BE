@@ -1,7 +1,7 @@
-const Lecture = require("../models/Lecture");
+const Prodi = require("../models/Prodi");
 
-const getAllLecture = async (req, res) => {
-    await Lecture.findAll()
+const getAllProdi = async (req, res) => {
+    await Prodi.findAll()
     .then(data => {
         if(!data.length) {
             return res.status(201).json({
@@ -21,15 +21,11 @@ const getAllLecture = async (req, res) => {
     });
 }
 
-const createLecture = async (req, res) => {
+const createProdi = async (req, res) => {
     var data = req.body
-    const uniqueNumber = (Math.floor(Math.random() * 100) + 1).toString().padStart(2, '0');
-    const nip = data.yearIn + uniqueNumber // sementara
-    await Lecture.create({
+    await Prodi.create({
         name: data.name,
-        email: data.email,
-        nip: nip,
-        gender: data.gender
+        idLecture: data.idLecture,
     })
     .then(data => {
         res.status(201).json({
@@ -43,27 +39,23 @@ const createLecture = async (req, res) => {
     });
 }
 
-const updateLecture = async (req, res) => {
+const updateProdi = async (req, res) => {
     const data = req.body
-    const uniqueNumber = (Math.floor(Math.random() * 100) + 1).toString().padStart(2, '0');
-    const nip = data.yearIn + uniqueNumber // sementara
-    await Lecture.update(
+    await Prodi.update(
         {
             name: data.name,
-            email: data.email,
-            nip: nip,
-            gender: data.gender
+            idLecture: data.idLecture
         },
         {
             where: {
-                lecture_Id: data.lectureId
+                prodi_Id: data.prodiId
             }
         }
     )
     .then(data => {
         if (data[0] === 0) {
             return res.status(400).json({
-                message: "Could not find the lecturer"
+                message: "Could not find prodi"
             });
         } 
         
@@ -78,18 +70,18 @@ const updateLecture = async (req, res) => {
     });
 }
 
-const deleteLecture = async (req, res) => {
-    await Lecture.destroy(
+const deleteProdi = async (req, res) => {
+    await Prodi.destroy(
         {
             where: {
-                lecture_Id: req.params.id
+                prodi_Id: req.params.id
             }
         }
     )
     .then(data => {
         if (data[0] === 0) {
             return res.status(400).json({
-                message: "Could not find the lecturer"
+                message: "Could not find prodi"
             });
         } 
         
@@ -106,8 +98,8 @@ const deleteLecture = async (req, res) => {
 
 
 module.exports = {
-    getAllLecture,
-    createLecture,
-    updateLecture,
-    deleteLecture
+    getAllProdi,
+    createProdi,
+    updateProdi,
+    deleteProdi
 }

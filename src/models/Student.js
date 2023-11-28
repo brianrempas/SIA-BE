@@ -19,6 +19,14 @@ const Student = db.define("student", {
         type: Sequelize.STRING,
         allowNull: false
     },
+    idProdi: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
+    gender: {
+        type: Sequelize.ENUM('Male','Female'),
+        allowNull: false
+    }
 },{
     freezeTableName: true
 });
